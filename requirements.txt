@@ -1,0 +1,9 @@
+python-dotenv
+flask
+flask-sqlalchemy
+google-generativeai
+newspaper3k
+lxml[html_clean]
+nltk
+requests
+beautifulsoup4

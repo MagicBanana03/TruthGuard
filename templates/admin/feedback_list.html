@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Feedback List - Admin{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">User Feedback</h1>
+    
+    {% if not feedback_entries %}
+        <div class="alert alert-info">No feedback has been submitted yet.</div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Date</th>
+                        <th>Name</th>
+                        <th>Rating</th>
+                        <th>Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for feedback in feedback_entries %}
+                    <tr>
+                        <td>{{ feedback.submission_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ feedback.name or 'Anonymous' }}</td>
+                        <td>
+                            <div class="rating-stars">
+                                {% for i in range(5) %}
+                                    {% if i < feedback.rating %}
+                                        <i class="fas fa-star text-warning"></i>
+                                    {% else %}
+                                        <i class="far fa-star text-warning"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="ms-2">{{ feedback.rating }}/5</span>
+                            </div>
+                        </td>
+                        <td>{{ feedback.comments }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+    
+    <div class="mt-4">
+        <a href="{{ url_for('home') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Home
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Font Awesome for star icons -->
+<script src="https://kit.fontawesome.com/your-code.js" crossorigin="anonymous"></script>
+{% endblock %}

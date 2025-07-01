@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+{% block title %}Mystery Game{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 backdrop-blur-lg rounded-full px-6 py-3 border border-orange-500/30 mb-6">
+                <i class="fas fa-search text-orange-400"></i>
+                <span class="text-orange-300 font-medium">Truth Detective</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent mb-4">
+                Mystery Solving Game
+            </h2>
+            <p class="text-gray-300 text-lg max-w-2xl mx-auto">
+                Become a truth detective and solve fake news mysteries through investigation and analysis
+            </p>
+        </div>
+
+        <!-- Initialize Game Section (when no levels exist) -->
+        {% if not levels %}
+        <div class="text-center mb-12">
+            <div class="bg-black/40 backdrop-blur-lg rounded-2xl border border-orange-500/30 p-12 hover:border-orange-400/50 transition-all duration-300">
+                <div class="w-24 h-24 bg-gradient-to-br from-orange-400 to-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-rocket text-white text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4">Initialize Game Levels</h3>
+                <p class="text-gray-300 mb-8 max-w-md mx-auto">
+                    Generate mystery levels using AI to create exciting fact-checking challenges
+                </p>
+                <button onclick="initializeLevels()" id="init-btn" class="group relative overflow-hidden bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-3 mx-auto">
+                    <i class="fas fa-magic text-xl group-hover:animate-bounce"></i>
+                    <span class="text-lg">Generate Levels</span>
+                    <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+                </button>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Game Content (when levels exist) -->
+        {% if levels %}
+        <!-- Stats Dashboard -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="bg-black/40 backdrop-blur-lg rounded-xl p-6 border border-green-500/30 text-center">
+                <div class="text-3xl font-bold text-green-400 mb-2">{{ total_score }}</div>
+                <div class="text-sm text-gray-400">Total Score</div>
+            </div>
+            <div class="bg-black/40 backdrop-blur-lg rounded-xl p-6 border border-blue-500/30 text-center">
+                <div class="text-3xl font-bold text-blue-400 mb-2">{{ "%.1f"|format(completion_rate) }}%</div>
+                <div class="text-sm text-gray-400">Completion Rate</div>
+            </div>
+            <div class="bg-black/40 backdrop-blur-lg rounded-xl p-6 border border-purple-500/30 text-center">
+                <div class="text-3xl font-bold text-purple-400 mb-2">{{ completed_levels|length }}</div>
+                <div class="text-sm text-gray-400">Levels Completed</div>
+            </div>
+        </div>
+
+        <!-- Level Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for level in levels %}
+            <div class="bg-black/40 backdrop-blur-lg rounded-xl border {% if level.id in completed_levels %}border-green-500/50{% elif playable_levels[loop.index0] %}border-orange-500/50{% else %}border-gray-600{% endif %} p-6 hover:border-orange-400/50 transition-all duration-300">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full {% if level.id in completed_levels %}bg-green-500{% elif playable_levels[loop.index0] %}bg-orange-500{% else %}bg-gray-700{% endif %} flex items-center justify-center">
+                            {% if level.id in completed_levels %}
+                                <i class="fas fa-check text-white"></i>
+                            {% elif playable_levels[loop.index0] %}
+                                <span class="text-white font-bold">{{ level.level_number }}</span>
+                            {% else %}
+                                <i class="fas fa-lock text-white"></i>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <h3 class="text-white font-semibold">Level {{ level.level_number }}</h3>
+                            <p class="text-gray-400 text-sm">{{ level.difficulty.title() }} • {{ level.time_limit // 60 }}min</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col items-end space-y-1">
+                        {% if level.difficulty == 'easy' %}
+                            <span class="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">Easy</span>
+                        {% elif level.difficulty == 'medium' %}
+                            <span class="px-2 py-1 bg-yellow-500/20 text-yellow-300 text-xs rounded-full">Medium</span>
+                        {% else %}
+                            <span class="px-2 py-1 bg-red-500/20 text-red-300 text-xs rounded-full">Hard</span>
+                        {% endif %}
+                        {% if level.id in completed_levels %}
+                            <span class="px-2 py-1 bg-green-500/20 text-green-300 text-xs rounded-full">✓ Completed</span>
+                        {% elif not playable_levels[loop.index0] %}
+                            <span class="px-2 py-1 bg-gray-500/20 text-gray-400 text-xs rounded-full">🔒 Locked</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="mb-4">
+                    <h4 class="text-white font-medium mb-2">Challenge Preview:</h4>
+                    <p class="text-gray-300 text-sm line-clamp-3">{{ level.headline }}</p>
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    {% if playable_levels[loop.index0] %}
+                        <a href="{{ url_for('game.play_level', level_id=level.id) }}" 
+                           class="flex-1 bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white font-bold py-3 px-4 rounded-lg transition-all duration-300 text-center">
+                            {% if level.id in completed_levels %}
+                                <i class="fas fa-redo mr-2"></i>Replay
+                            {% else %}
+                                <i class="fas fa-play mr-2"></i>Play
+                            {% endif %}
+                        </a>
+                    {% else %}
+                        <div class="flex-1 bg-gray-700 text-gray-400 font-bold py-3 px-4 rounded-lg text-center">
+                            <i class="fas fa-lock mr-2"></i>
+                            {% if loop.index0 == 0 %}Complete Tutorial{% else %}Complete Level {{ level.level_number - 1 }}{% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Progress indicator for locked levels -->
+                {% if not playable_levels[loop.index0] and level.level_number > 1 %}
+                <div class="mt-3 text-center">
+                    <p class="text-gray-500 text-xs">
+                        Complete Level {{ level.level_number - 1 }} to unlock
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Game Instructions -->
+        <div class="mt-16 bg-black/40 backdrop-blur-lg rounded-2xl border border-orange-500/30 p-8">
+            <h3 class="text-2xl font-bold text-white mb-6 text-center">How to Play</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-newspaper text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-white font-semibold mb-2">1. Analyze Headlines</h4>
+                    <p class="text-gray-400 text-sm">Read the AI-generated headline and article snippet carefully</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-search text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-white font-semibold mb-2">2. Gather Evidence</h4>
+                    <p class="text-gray-400 text-sm">Use social media, news sources, and expert opinions to investigate</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-gavel text-white text-2xl"></i>
+                    </div>
+                    <h4 class="text-white font-semibold mb-2">3. Make Decision</h4>
+                    <p class="text-gray-400 text-sm">Determine if the news is real or fake based on your investigation</p>
+                </div>
+            </div>
+            
+            <!-- Enhanced Dynamic Content Notice -->
+            <div class="mt-8 bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-xl p-6">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-magic text-orange-400 text-2xl animate-pulse"></i>
+                    <h4 class="text-white font-semibold text-lg">🔄 Always Fresh Content</h4>
+                </div>
+                <div class="space-y-3">
+                    <p class="text-gray-300 text-sm">
+                        <strong>Every single time</strong> you click "Play" or "Replay", our AI generates completely new content:
+                    </p>
+                    <ul class="text-gray-300 text-sm space-y-1 ml-4">
+                        <li>• 🗞️ Brand new headlines and scenarios</li>
+                        <li>• 📱 Different social media posts and reactions</li>
+                        <li>• 📰 Fresh news articles with varying credibility</li>
+                        <li>• 👨‍🏫 New expert opinions and analysis</li>
+                        <li>• 🎯 Different fake/real status for each play</li>
+                    </ul>
+                    <p class="text-orange-300 text-sm font-medium">
+                        🚀 This means infinite replayability - no two games are ever the same!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Loading Modal -->
+<div id="loading-modal" class="fixed inset-0 z-50 hidden overflow-y-auto">
+    <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 transition-opacity bg-black/80 backdrop-blur-sm"></div>
+        <div class="inline-block w-full max-w-md my-8 overflow-hidden text-left align-middle transition-all transform bg-black/90 backdrop-blur-lg shadow-xl rounded-2xl border border-orange-500/30">
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-gradient-to-br from-orange-400 to-red-600 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                    <i class="fas fa-magic text-white text-2xl animate-spin"></i>
+                </div>
+                <h3 class="text-xl font-semibold text-white mb-4">Generating Game Levels</h3>
+                <p class="text-gray-300 mb-6">AI is creating exciting mystery challenges for you...</p>
+                
+                <div class="w-full bg-gray-700 rounded-full h-3 mb-4">
+                    <div id="progress-bar" class="h-3 bg-gradient-to-r from-orange-400 to-red-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                
+                <p class="text-gray-400 text-sm" id="progress-text">Initializing...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function initializeLevels() {
+    const initBtn = document.getElementById('init-btn');
+    const modal = document.getElementById('loading-modal');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    
+    // Disable button and show modal
+    initBtn.disabled = true;
+    initBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i>Generating...';
+    modal.classList.remove('hidden');
+    
+    // Animate progress with level template creation
+    let progress = 0;
+    const progressSteps = [
+        'Initializing level system...',
+        'Creating level templates...',
+        'Setting up difficulty progression...',
+        'Configuring AI content system...',
+        'Finalizing game structure...'
+    ];
+    
+    const progressInterval = setInterval(() => {
+        progress += 20;
+        progressBar.style.width = progress + '%';
+        
+        if (progress <= 100) {
+            const stepIndex = Math.floor((progress - 1) / 20);
+            progressText.textContent = progressSteps[stepIndex] || 'Almost done...';
+        }
+        
+        if (progress >= 100) {
+            clearInterval(progressInterval);
+            progressText.textContent = 'Setting up dynamic content generation...';
+        }
+    }, 1000);
+    
+    // Make the actual request
+    fetch('{{ url_for("game.generate_levels") }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        clearInterval(progressInterval);
+        progressBar.style.width = '100%';
+        progressText.textContent = 'Complete!';
+        
+        setTimeout(() => {
+            if (data.success) {
+                // Reload page to show generated levels
+                window.location.reload();
+            } else {
+                // Show error
+                modal.classList.add('hidden');
+                initBtn.disabled = false;
+                initBtn.innerHTML = '<i class="fas fa-magic mr-2"></i>Generate Levels';
+                showNotification(data.message || 'Failed to create level templates. Please try again.', 'error');
+            }
+        }, 1500);
+    })
+    .catch(error => {
+        clearInterval(progressInterval);
+        modal.classList.add('hidden');
+        initBtn.disabled = false;
+        initBtn.innerHTML = '<i class="fas fa-magic mr-2"></i>Generate Levels';
+        showNotification('Network error. Please check your connection and try again.', 'error');
+        console.error('Error:', error);
+    });
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-20 right-4 z-50 max-w-sm w-full transform transition-all duration-300 translate-x-full`;
+    
+    const bgColor = type === 'error' ? 'bg-red-500/90' : 'bg-green-500/90';
+    const icon = type === 'error' ? 'fa-exclamation-triangle' : 'fa-check-circle';
+    
+    notification.innerHTML = `
+        <div class="${bgColor} backdrop-blur-lg border border-white/20 rounded-xl p-4 shadow-xl">
+            <div class="flex items-center space-x-3">
+                <i class="fas ${icon} text-white text-lg"></i>
+                <p class="text-white text-sm font-medium">${message}</p>
+                <button onclick="this.closest('.fixed').remove()" class="text-white/80 hover:text-white ml-auto">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.classList.remove('translate-x-full');
+    }, 100);
+    
+    // Auto remove after 5 seconds
+    setTimeout(() => {
+        notification.classList.add('translate-x-full');
+        setTimeout(() => notification.remove(), 300);
+    }, 5000);
+}
+</script>
+{% endblock %}

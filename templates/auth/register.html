@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md mx-auto">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-lg rounded-full px-6 py-3 border border-purple-500/30 mb-6">
+                <i class="fas fa-user-plus text-purple-400"></i>
+                <span class="text-purple-300 font-medium">Join TruthGuard</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+                Create Account
+            </h2>
+            <p class="text-gray-300 text-lg">
+                Start your fact-checking journey today
+            </p>
+        </div>
+
+        <!-- Register Form -->
+        <div class="bg-black/40 backdrop-blur-lg rounded-2xl border border-purple-500/30 p-8 hover:border-purple-400/50 transition-all duration-300">
+            <div class="text-center mb-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-rocket text-white text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-2">Get Started</h3>
+                <p class="text-gray-400">Create your account in seconds</p>
+            </div>
+
+            <!-- Register Error Display -->
+            {% if error %}
+            <div class="mb-6 bg-red-500/20 border border-red-500/50 rounded-xl p-4 flex items-center space-x-3">
+                <i class="fas fa-exclamation-triangle text-red-400 text-xl"></i>
+                <p class="text-red-300">{{ error }}</p>
+            </div>
+            {% endif %}
+
+            {% if errors %}
+            <div class="mb-6 bg-red-500/20 border border-red-500/50 rounded-xl p-4">
+                <div class="flex items-center space-x-3 mb-2">
+                    <i class="fas fa-exclamation-triangle text-red-400 text-xl"></i>
+                    <p class="text-red-300 font-semibold">Please fix the following:</p>
+                </div>
+                <ul class="text-red-300 text-sm ml-6 space-y-1">
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <!-- Register Form -->
+            <form method="POST" class="space-y-6" id="register-form">
+                <div class="form-group">
+                    <label for="username" class="block text-lg font-semibold text-white mb-3 flex items-center space-x-2">
+                        <i class="fas fa-user text-purple-400"></i>
+                        <span>Username</span>
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="username" name="username" value="{{ username or '' }}"
+                               class="w-full bg-black/50 border border-gray-600 rounded-xl px-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-300"
+                               placeholder="Choose a username..." minlength="3" required />
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+                            <i class="fas fa-signature text-gray-400"></i>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1">At least 3 characters</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="block text-lg font-semibold text-white mb-3 flex items-center space-x-2">
+                        <i class="fas fa-envelope text-purple-400"></i>
+                        <span>Email Address</span>
+                    </label>
+                    <div class="relative">
+                        <input type="email" id="email" name="email" value="{{ email or '' }}"
+                               class="w-full bg-black/50 border border-gray-600 rounded-xl px-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-300"
+                               placeholder="Enter your email..." required />
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+                            <i class="fas fa-at text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="block text-lg font-semibold text-white mb-3 flex items-center space-x-2">
+                        <i class="fas fa-lock text-purple-400"></i>
+                        <span>Password</span>
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="password" name="password" 
+                               class="w-full bg-black/50 border border-gray-600 rounded-xl px-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-300"
+                               placeholder="Create a password..." minlength="6" required />
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+                            <button type="button" onclick="togglePassword('password')" class="text-gray-400 hover:text-white transition-colors">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Password Strength Indicator -->
+                    <div class="mt-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm text-gray-400">Password Strength:</span>
+                            <span id="strength-text" class="text-sm font-medium text-gray-400">Weak</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2">
+                            <div id="strength-bar" class="h-2 rounded-full transition-all duration-300 bg-red-500" style="width: 0%"></div>
+                        </div>
+                        <div id="password-requirements" class="mt-3 space-y-1 text-xs">
+                            <div id="req-length" class="flex items-center space-x-2 text-gray-500">
+                                <i class="fas fa-times"></i>
+                                <span>At least 6 characters</span>
+                            </div>
+                            <div id="req-uppercase" class="flex items-center space-x-2 text-gray-500">
+                                <i class="fas fa-times"></i>
+                                <span>One uppercase letter</span>
+                            </div>
+                            <div id="req-lowercase" class="flex items-center space-x-2 text-gray-500">
+                                <i class="fas fa-times"></i>
+                                <span>One lowercase letter</span>
+                            </div>
+                            <div id="req-number" class="flex items-center space-x-2 text-gray-500">
+                                <i class="fas fa-times"></i>
+                                <span>One number</span>
+                            </div>
+                            <div id="req-special" class="flex items-center space-x-2 text-gray-500">
+                                <i class="fas fa-times"></i>
+                                <span>One special character (!@#$%^&*)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password" class="block text-lg font-semibold text-white mb-3 flex items-center space-x-2">
+                        <i class="fas fa-check text-purple-400"></i>
+                        <span>Confirm Password</span>
+                    </label>
+                    <div class="relative">
+                        <input type="password" id="confirm_password" name="confirm_password" 
+                               class="w-full bg-black/50 border border-gray-600 rounded-xl px-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:ring-2 focus:ring-purple-400/20 transition-all duration-300"
+                               placeholder="Confirm your password..." required />
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+                            <i class="fas fa-shield-alt text-gray-400" id="confirm-icon"></i>
+                        </div>
+                    </div>
+                    <div id="password-match" class="mt-2 text-sm hidden">
+                        <div id="match-indicator" class="flex items-center space-x-2">
+                            <i class="fas fa-times text-red-400"></i>
+                            <span class="text-red-300">Passwords do not match</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="submit-btn" class="w-full group relative overflow-hidden bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-3 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                    <i class="fas fa-user-plus text-xl"></i>
+                    <span class="text-lg">Create Account</span>
+                    <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+                </button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <p class="text-gray-400">Already have an account? <a href="{{ url_for('auth.login') }}" class="text-purple-400 hover:text-purple-300 font-semibold">Sign in</a></p>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-black/30 backdrop-blur-lg rounded-xl p-4 border border-purple-500/20 text-center hover:border-purple-400/50 transition-all duration-300">
+                <div class="w-10 h-10 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-rocket text-white text-lg"></i>
+                </div>
+                <h3 class="text-sm font-semibold text-white mb-1">Quick Setup</h3>
+                <p class="text-gray-400 text-xs">Get started in seconds</p>
+            </div>
+            
+            <div class="bg-black/30 backdrop-blur-lg rounded-xl p-4 border border-cyan-500/20 text-center hover:border-cyan-400/50 transition-all duration-300">
+                <div class="w-10 h-10 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-history text-white text-lg"></i>
+                </div>
+                <h3 class="text-sm font-semibold text-white mb-1">Track Progress</h3>
+                <p class="text-gray-400 text-xs">Save your analyses</p>
+            </div>
+            
+            <div class="bg-black/30 backdrop-blur-lg rounded-xl p-4 border border-green-500/20 text-center hover:border-green-400/50 transition-all duration-300">
+                <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center mx-auto mb-3">
+                    <i class="fas fa-shield-alt text-white text-lg"></i>
+                </div>
+                <h3 class="text-sm font-semibold text-white mb-1">Secure & Safe</h3>
+                <p class="text-gray-400 text-xs">Privacy protected</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = input.nextElementSibling.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirm_password');
+    const strengthBar = document.getElementById('strength-bar');
+    const strengthText = document.getElementById('strength-text');
+    const submitBtn = document.getElementById('submit-btn');
+    const passwordMatch = document.getElementById('password-match');
+    const matchIndicator = document.getElementById('match-indicator');
+    const confirmIcon = document.getElementById('confirm-icon');
+
+    // Password strength requirements
+    const requirements = {
+        length: document.getElementById('req-length'),
+        uppercase: document.getElementById('req-uppercase'),
+        lowercase: document.getElementById('req-lowercase'),
+        number: document.getElementById('req-number'),
+        special: document.getElementById('req-special')
+    };
+
+    function updateRequirement(element, met) {
+        const icon = element.querySelector('i');
+        if (met) {
+            element.classList.remove('text-gray-500');
+            element.classList.add('text-green-400');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-check');
+        } else {
+            element.classList.remove('text-green-400');
+            element.classList.add('text-gray-500');
+            icon.classList.remove('fa-check');
+            icon.classList.add('fa-times');
+        }
+    }
+
+    function calculatePasswordStrength(password) {
+        let score = 0;
+        const checks = {
+            length: password.length >= 6,
+            uppercase: /[A-Z]/.test(password),
+            lowercase: /[a-z]/.test(password),
+            number: /\d/.test(password),
+            special: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+        };
+
+        // Update requirements display
+        updateRequirement(requirements.length, checks.length);
+        updateRequirement(requirements.uppercase, checks.uppercase);
+        updateRequirement(requirements.lowercase, checks.lowercase);
+        updateRequirement(requirements.number, checks.number);
+        updateRequirement(requirements.special, checks.special);
+
+        // Calculate score
+        Object.values(checks).forEach(check => {
+            if (check) score += 20;
+        });
+
+        return { score, checks };
+    }
+
+    function updatePasswordStrength() {
+        const password = passwordInput.value;
+        const { score, checks } = calculatePasswordStrength(password);
+        
+        let strength = 'Weak';
+        let color = 'bg-red-500';
+        
+        if (score >= 80) {
+            strength = 'Very Strong';
+            color = 'bg-green-500';
+        } else if (score >= 60) {
+            strength = 'Strong';
+            color = 'bg-yellow-500';
+        } else if (score >= 40) {
+            strength = 'Medium';
+            color = 'bg-orange-500';
+        } else if (score >= 20) {
+            strength = 'Weak';
+            color = 'bg-red-500';
+        }
+
+        strengthBar.className = `h-2 rounded-full transition-all duration-300 ${color}`;
+        strengthBar.style.width = `${score}%`;
+        strengthText.textContent = strength;
+        strengthText.className = `text-sm font-medium ${color.replace('bg-', 'text-')}`;
+
+        return score >= 60; // Require at least "Strong" password
+    }
+
+    function checkPasswordMatch() {
+        const password = passwordInput.value;
+        const confirm = confirmInput.value;
+        
+        if (confirm.length === 0) {
+            passwordMatch.classList.add('hidden');
+            confirmIcon.className = 'fas fa-shield-alt text-gray-400';
+            return true;
+        }
+        
+        passwordMatch.classList.remove('hidden');
+        
+        if (password === confirm) {
+            matchIndicator.innerHTML = `
+                <i class="fas fa-check text-green-400"></i>
+                <span class="text-green-300">Passwords match</span>
+            `;
+            confirmIcon.className = 'fas fa-check text-green-400';
+            return true;
+        } else {
+            matchIndicator.innerHTML = `
+                <i class="fas fa-times text-red-400"></i>
+                <span class="text-red-300">Passwords do not match</span>
+            `;
+            confirmIcon.className = 'fas fa-times text-red-400';
+            return false;
+        }
+    }
+
+    function updateSubmitButton() {
+        const isStrongPassword = updatePasswordStrength();
+        const passwordsMatch = checkPasswordMatch();
+        const isValid = isStrongPassword && passwordsMatch && passwordInput.value.length >= 6;
+        
+        submitBtn.disabled = !isValid;
+    }
+
+    passwordInput.addEventListener('input', updateSubmitButton);
+    confirmInput.addEventListener('input', updateSubmitButton);
+
+    // Form validation
+    document.getElementById('register-form').addEventListener('submit', function(e) {
+        const isStrongPassword = updatePasswordStrength();
+        const passwordsMatch = checkPasswordMatch();
+        
+        if (!isStrongPassword) {
+            e.preventDefault();
+            alert('Please create a stronger password meeting all requirements.');
+            return;
+        }
+        
+        if (!passwordsMatch) {
+            e.preventDefault();
+            alert('Passwords do not match.');
+            return;
+        }
+    });
+});
+</script>
+
+<style>
+/* Additional styles for better form interaction */
+.form-group input:focus + .absolute i {
+    color: currentColor;
+}
+
+/* Smooth transitions for form elements */
+.form-group input {
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    transform: translateY(-1px);
+}
+
+/* Password strength animation */
+#strength-bar {
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+/* Requirements list styling */
+#password-requirements div {
+    transition: color 0.3s ease;
+}
+</style>
+{% endblock %}

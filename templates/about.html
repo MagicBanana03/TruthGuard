@@ -1,0 +1,131 @@
+<!-- templates/about.html --> 
+{% extends 'base.html' %}
+{% block title %}About TruthGuard{% endblock %}
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-4xl mx-auto">
+    
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-purple-500/20 to-cyan-500/20 backdrop-blur-lg rounded-full px-6 py-3 border border-purple-500/30 mb-6">
+        <i class="fas fa-info-circle text-purple-400"></i>
+        <span class="text-purple-300 font-medium">Learn More</span>
+      </div>
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+        About TruthGuard
+      </h1>
+      <p class="text-gray-300 text-lg max-w-2xl mx-auto">
+        AI-powered fact-checking for Philippine political news
+      </p>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="bg-black/40 backdrop-blur-lg rounded-xl p-8 border border-gray-600 mb-8">
+      <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+        <i class="fas fa-bullseye text-cyan-400 mr-3"></i>
+        Our Mission
+      </h2>
+      <p class="text-gray-300 leading-relaxed text-lg">
+        TruthGuard empowers citizens with AI-driven fact-checking tools to combat misinformation in Philippine political discourse. 
+        We believe that access to accurate information is fundamental to a healthy democracy.
+      </p>
+    </div>
+
+    <!-- How It Works -->
+    <div class="bg-black/40 backdrop-blur-lg rounded-xl p-8 border border-gray-600 mb-8">
+      <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+        <i class="fas fa-cogs text-purple-400 mr-3"></i>
+        How It Works
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="text-center">
+          <div class="bg-cyan-500/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-link text-cyan-400 text-2xl"></i>
+          </div>
+          <h3 class="text-white font-semibold mb-2">Submit Content</h3>
+          <p class="text-gray-400 text-sm">Paste a URL or text snippet of political news you want to verify</p>
+        </div>
+        <div class="text-center">
+          <div class="bg-purple-500/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-brain text-purple-400 text-2xl"></i>
+          </div>
+          <h3 class="text-white font-semibold mb-2">AI Analysis</h3>
+          <p class="text-gray-400 text-sm">Our AI analyzes sources, claims, and context using advanced language models</p>
+        </div>
+        <div class="text-center">
+          <div class="bg-green-500/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-chart-bar text-green-400 text-2xl"></i>
+          </div>
+          <h3 class="text-white font-semibold mb-2">Get Results</h3>
+          <p class="text-gray-400 text-sm">Receive a detailed factuality score with explanations and source analysis</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features -->
+    <div class="bg-black/40 backdrop-blur-lg rounded-xl p-8 border border-gray-600 mb-8">
+      <h2 class="text-2xl font-bold text-white mb-6 flex items-center">
+        <i class="fas fa-star text-yellow-400 mr-3"></i>
+        Key Features
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex items-start space-x-3">
+          <i class="fas fa-shield-alt text-cyan-400 text-xl mt-1"></i>
+          <div>
+            <h3 class="text-white font-semibold mb-1">Factuality Scoring</h3>
+            <p class="text-gray-400 text-sm">Get a 0-100% factuality score with detailed breakdown of analysis factors</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3">
+          <i class="fas fa-history text-purple-400 text-xl mt-1"></i>
+          <div>
+            <h3 class="text-white font-semibold mb-1">Analysis History</h3>
+            <p class="text-gray-400 text-sm">Track your fact-checking journey with comprehensive statistics and trends</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3">
+          <i class="fas fa-globe text-green-400 text-xl mt-1"></i>
+          <div>
+            <h3 class="text-white font-semibold mb-1">Source Analysis</h3>
+            <p class="text-gray-400 text-sm">Evaluate the credibility and reliability of news sources</p>
+          </div>
+        </div>
+        <div class="flex items-start space-x-3">
+          <i class="fas fa-gamepad text-yellow-400 text-xl mt-1"></i>
+          <div>
+            <h3 class="text-white font-semibold mb-1">Gamification</h3>
+            <p class="text-gray-400 text-sm">Earn points and achievements while improving your media literacy skills</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Technology -->
+    <div class="bg-black/40 backdrop-blur-lg rounded-xl p-8 border border-gray-600 mb-8">
+      <h2 class="text-2xl font-bold text-white mb-4 flex items-center">
+        <i class="fas fa-microchip text-cyan-400 mr-3"></i>
+        Technology
+      </h2>
+      <p class="text-gray-300 leading-relaxed mb-4">
+        TruthGuard is powered by Google's Gemini AI, providing state-of-the-art natural language processing 
+        capabilities specifically trained to understand Philippine political context and detect misinformation patterns.
+      </p>
+      <div class="flex flex-wrap gap-2">
+        <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-sm">Google Gemini AI</span>
+        <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">Flask Framework</span>
+        <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">Natural Language Processing</span>
+        <span class="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-sm">Machine Learning</span>
+      </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center">
+      <a href="/detector" class="inline-flex items-center space-x-2 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 text-lg">
+        <i class="fas fa-search"></i>
+        <span>Start Fact-Checking</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,390 @@
+<!-- templates/detector.html -->
+{% extends 'base.html' %}
+{% block title %}Detector{% endblock %}
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 backdrop-blur-lg rounded-full px-6 py-3 border border-cyan-500/30 mb-6">
+                <i class="fas fa-search text-cyan-400"></i>
+                <span class="text-cyan-300 font-medium">Truth Detection Engine</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-4">
+                Article Analysis Chamber
+            </h2>
+            <p class="text-gray-300 text-lg max-w-2xl mx-auto">
+                Submit your article for AI-powered bias detection and fact-checking analysis
+            </p>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="mb-8">
+            <div class="flex items-center justify-center space-x-4 mb-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-white text-sm font-bold">1</div>
+                    <span class="text-cyan-300 font-medium hidden sm:inline">Setup</span>
+                </div>
+                <div class="w-16 h-1 bg-gray-700 rounded-full">
+                    <div class="w-0 h-full bg-gradient-to-r from-cyan-400 to-purple-400 rounded-full transition-all duration-500" id="progress-bar"></div>
+                </div>
+                <div class="flex items-center space-x-2" id="analysis-step">
+                    <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm font-bold" id="analysis-circle">2</div>
+                    <span class="text-gray-400 font-medium hidden sm:inline" id="analysis-text">Analysis</span>
+                </div>
+                <div class="w-16 h-1 bg-gray-700 rounded-full">
+                    <div class="w-0 h-full bg-gradient-to-r from-purple-400 to-green-400 rounded-full transition-all duration-500" id="progress-bar-2"></div>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm font-bold">3</div>
+                    <span class="text-gray-400 font-medium hidden sm:inline">Results</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Form Card -->
+        <div class="bg-black/40 backdrop-blur-lg rounded-2xl border border-cyan-500/30 p-8 hover:border-cyan-400/50 transition-all duration-300">
+            <form id="detector-form" method="POST" action="{{ url_for('detector') }}" class="space-y-8">
+                <!-- Title Input Method -->
+                <div class="form-group">
+                    <label for="title-input-method" class="block text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+                        <i class="fas fa-heading text-cyan-400"></i>
+                        <span>Title Generation Method</span>
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="radio-card cursor-pointer">
+                            <input type="radio" name="title-input-method" value="automatic" class="sr-only" />
+                            <div class="radio-card-content bg-black/30 border-2 border-gray-600 rounded-xl p-6 transition-all duration-300 hover:border-cyan-400/50">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-magic text-2xl text-purple-400"></i>
+                                    <div>
+                                        <div class="font-semibold text-white">Automatic</div>
+                                        <div class="text-sm text-gray-400">AI generates title</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="radio-card cursor-pointer">
+                            <input type="radio" name="title-input-method" value="manual" class="sr-only" />
+                            <div class="radio-card-content bg-black/30 border-2 border-gray-600 rounded-xl p-6 transition-all duration-300 hover:border-cyan-400/50">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-edit text-2xl text-cyan-400"></i>
+                                    <div>
+                                        <div class="font-semibold text-white">Manual</div>
+                                        <div class="text-sm text-gray-400">Enter title yourself</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Article Title Input -->
+                <div id="title-input-container" class="form-group hidden">
+                    <label for="article-title" class="block text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+                        <i class="fas fa-quote-left text-cyan-400"></i>
+                        <span>Article Title</span>
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="article-title" name="article-title" 
+                               class="w-full bg-black/50 border border-gray-600 rounded-xl px-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-300"
+                               placeholder="Enter the article title..." />
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+                            <i class="fas fa-pen text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Type Selection -->
+                <div class="form-group">
+                    <label for="input-type" class="block text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+                        <i class="fas fa-file-alt text-cyan-400"></i>
+                        <span>Input Method</span>
+                    </label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <label class="radio-card cursor-pointer">
+                            <input type="radio" name="input-type" value="link" class="sr-only" />
+                            <div class="radio-card-content bg-black/30 border-2 border-gray-600 rounded-xl p-6 transition-all duration-300 hover:border-cyan-400/50">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-link text-2xl text-green-400"></i>
+                                    <div>
+                                        <div class="font-semibold text-white">Article Link</div>
+                                        <div class="text-sm text-gray-400">Paste article URL</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="radio-card cursor-pointer">
+                            <input type="radio" name="input-type" value="snippet" class="sr-only" />
+                            <div class="radio-card-content bg-black/30 border-2 border-gray-600 rounded-xl p-6 transition-all duration-300 hover:border-cyan-400/50">
+                                <div class="flex items-center space-x-3">
+                                    <i class="fas fa-clipboard text-2xl text-yellow-400"></i>
+                                    <div>
+                                        <div class="font-semibold text-white">Article Snippet</div>
+                                        <div class="text-sm text-gray-400">Paste article text</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Dynamic Input Field -->
+                <div id="input-field-container" class="form-group">
+                    <!-- Input field will be injected here -->
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 pt-8">
+                    <button type="submit" class="flex-1 group relative overflow-hidden bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-3 cursor-pointer">
+                        <i class="fas fa-rocket text-xl group-hover:animate-bounce"></i>
+                        <span class="text-lg">Analyze Article</span>
+                        <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+                    </button>
+                    
+                    <button type="reset" class="flex-1 bg-black/40 backdrop-blur-lg border-2 border-gray-600 hover:border-red-400 text-gray-300 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-3 cursor-pointer">
+                        <i class="fas fa-redo text-xl"></i>
+                        <span class="text-lg">Reset Form</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-cyan-500/20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-lightbulb text-yellow-400 text-xl"></i>
+                    <h3 class="font-semibold text-white">Pro Tip</h3>
+                </div>
+                <p class="text-gray-300 text-sm">For best results, use recent political news articles from reputable sources.</p>
+            </div>
+            
+            <div class="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-purple-500/20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-clock text-purple-400 text-xl"></i>
+                    <h3 class="font-semibold text-white">Quick Analysis</h3>
+                </div>
+                <p class="text-gray-300 text-sm">Most articles are analyzed in under 30 seconds with our AI engine.</p>
+            </div>
+            
+            <div class="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-green-500/20">
+                <div class="flex items-center space-x-3 mb-4">
+                    <i class="fas fa-shield-alt text-green-400 text-xl"></i>
+                    <h3 class="font-semibold text-white">Privacy First</h3>
+                </div>
+                <p class="text-gray-300 text-sm">Your data is processed securely and not stored permanently.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Title input method handling
+    const titleInputMethodRadios = document.querySelectorAll('input[name="title-input-method"]');
+    const titleInputContainer = document.getElementById('title-input-container');
+    
+    titleInputMethodRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'manual') {
+                titleInputContainer.classList.remove('hidden');
+            } else {
+                titleInputContainer.classList.add('hidden');
+            }
+        });
+    });
+    
+    // Input type handling
+    const inputTypeRadios = document.querySelectorAll('input[name="input-type"]');
+    const inputFieldContainer = document.getElementById('input-field-container');
+    
+    inputTypeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'link') {
+                inputFieldContainer.innerHTML = `
+                    <label for="article-link" class="block text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+                        <i class="fas fa-link text-green-400"></i>
+                        <span>Article URL</span>
+                    </label>
+                    <div class="relative">
+                        <input type="url" id="article-link" name="article-link" 
+                               class="w-full bg-black/50 border border-gray-600 rounded-xl px-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-400/20 transition-all duration-300"
+                               placeholder="https://example.com/article-url" required />
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-4">
+                            <i class="fas fa-globe text-gray-400"></i>
+                        </div>
+                    </div>
+                `;
+            } else if (this.value === 'snippet') {
+                inputFieldContainer.innerHTML = `
+                    <label for="article-snippet" class="block text-lg font-semibold text-white mb-4 flex items-center space-x-2">
+                        <i class="fas fa-clipboard text-yellow-400"></i>
+                        <span>Article Text</span>
+                    </label>
+                    <div class="relative">
+                        <textarea id="article-snippet" name="article-snippet" rows="8"
+                                  class="w-full bg-black/50 border border-gray-600 rounded-xl px-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all duration-300 resize-none"
+                                  placeholder="Paste the article content here..." required></textarea>
+                        <div class="absolute bottom-4 right-4 text-gray-500 text-sm">
+                            <span id="snippet-char-count">0</span> characters
+                        </div>
+                    </div>
+                `;
+                
+                // Add character counter for snippet
+                const snippetTextarea = document.getElementById('article-snippet');
+                const snippetCharCount = document.getElementById('snippet-char-count');
+                
+                if (snippetTextarea && snippetCharCount) {
+                    snippetTextarea.addEventListener('input', function() {
+                        snippetCharCount.textContent = this.value.length;
+                    });
+                }
+            }
+        });
+    });
+    
+    // Progress bar animation
+    const progressBar = document.getElementById('progress-bar');
+    const progressBar2 = document.getElementById('progress-bar-2');
+    const analysisCircle = document.getElementById('analysis-circle');
+    const analysisText = document.getElementById('analysis-text');
+    let progress = 0;
+    
+    function updateProgress() {
+        const titleMethod = document.querySelector('input[name="title-input-method"]:checked');
+        const inputType = document.querySelector('input[name="input-type"]:checked');
+        const hasContent = document.getElementById('article-link')?.value || 
+                          document.getElementById('article-snippet')?.value ||
+                          false;
+        
+        if (titleMethod) progress = 33;
+        if (inputType) progress = 66;
+        if (hasContent) progress = 100;
+        
+        progressBar.style.width = progress + '%';
+    }
+    
+    function showAnalysisLoading() {
+        // Update analysis step to show loading
+        analysisCircle.className = 'w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white text-sm font-bold animate-pulse';
+        analysisCircle.innerHTML = '<i class="fas fa-spinner animate-spin"></i>';
+        analysisText.className = 'text-purple-300 font-medium hidden sm:inline';
+        analysisText.textContent = 'Analyzing...';
+        
+        // Animate second progress bar
+        progressBar2.style.width = '100%';
+    }
+    
+    // Listen for changes to update progress
+    document.addEventListener('change', updateProgress);
+    document.addEventListener('input', updateProgress);
+    
+    // Form submission handling
+    const detectorForm = document.getElementById('detector-form');
+    if (detectorForm) {
+        detectorForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            showAnalysisLoading();
+            
+            // Continue with existing form submission logic
+            const formData = new FormData(detectorForm);
+            fetch(detectorForm.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error === 'non_political') {
+                    // Reset progress indicator
+                    resetAnalysisStep();
+                    showNotification("TruthGuard only accepts Philippine political news articles. Please submit a Philippine political news article for analysis.", 'error');
+                } else if (data.error === 'explicit_content') {
+                    resetAnalysisStep();
+                    showNotification("This political article contains explicit content. Please enter another one.", 'error');
+                } else if (data.redirect_url) {
+                    window.location.href = data.redirect_url;
+                } else if (data.error) {
+                    resetAnalysisStep();
+                    showNotification(data.error, 'error');
+                }
+            })
+            .catch(error => {
+                resetAnalysisStep();
+                console.error('Error:', error);
+                showNotification('An error occurred while processing your request. Please try again.', 'error');
+            });
+        });
+    }
+    
+    function resetAnalysisStep() {
+        analysisCircle.className = 'w-8 h-8 rounded-full bg-gray-700 flex items-center justify-center text-gray-400 text-sm font-bold';
+        analysisCircle.textContent = '2';
+        analysisText.className = 'text-gray-400 font-medium hidden sm:inline';
+        analysisText.textContent = 'Analysis';
+        progressBar2.style.width = '0%';
+    }
+    
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `fixed top-20 right-4 z-50 max-w-sm w-full transform transition-all duration-300 translate-x-full`;
+        
+        const bgColor = type === 'error' ? 'bg-red-500/90' : 'bg-cyan-500/90';
+        const icon = type === 'error' ? 'fa-exclamation-triangle' : 'fa-info-circle';
+        
+        notification.innerHTML = `
+            <div class="${bgColor} backdrop-blur-lg border border-white/20 rounded-xl p-4 shadow-xl">
+                <div class="flex items-center space-x-3">
+                    <i class="fas ${icon} text-white text-lg"></i>
+                    <p class="text-white text-sm font-medium">${message}</p>
+                    <button onclick="this.closest('.fixed').remove()" class="text-white/80 hover:text-white ml-auto">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Animate in
+        setTimeout(() => {
+            notification.classList.remove('translate-x-full');
+        }, 100);
+        
+        // Auto remove after 5 seconds
+        setTimeout(() => {
+            notification.classList.add('translate-x-full');
+            setTimeout(() => notification.remove(), 300);
+        }, 5000);
+    }
+});
+</script>
+
+<style>
+    .radio-card input:checked + .radio-card-content {
+        @apply border-cyan-400 bg-cyan-500/10 shadow-lg;
+        border-width: 2px;
+    }
+    
+    .radio-card-content {
+        @apply relative transition-all duration-300;
+    }
+    
+    .radio-card:hover .radio-card-content {
+        @apply border-cyan-400/70;
+    }
+    
+    /* Ensure containers don't overflow */
+    .form-group {
+        @apply w-full overflow-hidden;
+    }
+    
+    /* Responsive grid adjustments */
+    @media (max-width: 640px) {
+        .grid {
+            @apply grid-cols-1;
+        }
+    }
+</style>
+{% endblock %}

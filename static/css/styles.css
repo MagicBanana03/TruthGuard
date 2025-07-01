@@ -1,0 +1,927 @@
+/* Keep only essential custom styles that work with Tailwind CSS */
+:root {
+    --background-dark: #121212;
+    --text-dark: #ffffff;
+    --navbar-bg-dark: #1f1f1f;
+    --button-bg-dark: #00bcd4;
+    --button-hover-bg-dark: #008c9e;
+    --link-text-decoration: none;
+
+    --background-light: #ffffff;
+    --text-light: #000000;
+    --navbar-bg-light: #f1f1f1;
+    --button-bg-light: #1e90ff;
+    --button-hover-bg-light: #187bcd;
+}
+
+/* Global box-sizing to prevent overflow issues */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Remove old CSS that conflicts with Tailwind */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: linear-gradient(135deg, #0f172a 0%, #581c87 35%, #0f172a 100%) no-repeat fixed;
+    background-size: 100% 100%;
+}
+
+/* Custom font families for Tailwind */
+.font-orbitron { 
+    font-family: 'Orbitron', monospace; 
+}
+
+.font-rajdhani { 
+    font-family: 'Rajdhani', sans-serif; 
+}
+
+/* Navigation active state */
+.nav-link.active {
+    @apply text-cyan-300 bg-cyan-500/20;
+}
+
+/* Custom radio card styles for detector page */
+.radio-card-content {
+    @apply relative;
+}
+
+/* Rating stars for feedback page */
+.rating-stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+}
+
+.rating-stars input[type="radio"]:checked ~ label .fas,
+.rating-stars label:hover .fas,
+.rating-stars label:hover ~ label .fas {
+    color: #ffd700;
+}
+
+.star {
+    transition: all 0.2s ease-in-out;
+}
+
+.star:hover {
+    transform: scale(1.1);
+}
+
+/* Background video for home page */
+#background-video {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(50%);
+    pointer-events: none;
+}
+
+/* Line graph styles for results page */
+.line-graph {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 10px;
+    background-color: #ccc;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.line-graph .graph-fill {
+    display: block;
+    height: 100%;
+    background-color: var(--button-bg-light, #00bcd4);
+    width: var(--percentage);
+    border-radius: 5px;
+}
+
+.line-graph:hover::after {
+    content: attr(data-hover-text) "%";
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 100;
+}
+
+/* History page specific styles */
+.history-item.highlight {
+    box-shadow: 0px 0px 10px 2px var(--button-bg-light);
+}
+
+.history-item.active {
+    box-shadow: 0px 0px 10px 2px var(--button-bg-light);
+}
+
+.history-item:not(.highlight):not(.active):hover {
+    box-shadow: 0px 0px 10px 2px var(--background-light);
+}
+
+/* Remove conflicting history item styles - let Tailwind handle them */
+/* History page specific styles - simplified */
+.history-item:focus,
+.history-item.highlight:focus {
+    outline: none;
+}
+
+.history-item:focus-visible, 
+.history-item.highlight:focus-visible {
+    outline: solid 0.5px white;
+}
+
+/* Pagination button styles */
+.pagination-button {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    color: #ffffff;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination-button:hover {
+    background-color: var(--button-bg-light);
+}
+
+.pagination-button.active {
+    background-color: var(--button-bg-light);
+    border-color: var(--background-light);
+}
+
+.pagination-button i {
+    font-size: 16px;
+}
+
+/* Remove any conflicting footer styles - let Tailwind handle footer positioning */
+    align-items: center;       /* Centers content horizontally */
+    justify-content: center;   /* Centers content vertically */
+    position: relative;
+    z-index: 1;
+    color: var(--text-dark);
+    text-align: center;
+    padding: 0;                /* Ensures no extra padding causes overflow */
+    overflow: hidden;
+    
+}
+
+#background-video {
+    position: fixed;           /* Keeps the video fixed and covering the whole viewport */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;               /* Places the video behind all content */
+    filter: brightness(50%);
+    pointer-events: none;
+}
+
+/* Optional: Semi-transparent overlay */
+.landing-page::before {
+    content: '';
+    position: fixed;           /* Keeps the overlay fixed over the video */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 0;                /* Puts the overlay behind the content */
+    pointer-events: none;
+}
+
+.landing-page h1,
+.landing-page .tagline,
+.landing-page .buttons {
+    z-index: 1;                /* Ensures content appears above the overlay */
+}
+
+.landing-page h1 {
+    margin: 0;
+}
+
+.brand {
+    color: var(--button-bg-light);
+    margin: 0;
+}
+
+.tagline {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #bbbbbb;
+    margin-bottom: 0;
+}
+
+.buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;                 /* Adds spacing between buttons */
+    justify-content: center;   /* Centers buttons horizontally */
+    flex-wrap: wrap;           /* Ensures buttons wrap if needed */
+}
+
+.btn {
+    display: inline-block;
+    margin: 15px 10px;
+    padding: 15px 0;
+    width: 200px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: var(--button-bg-light);
+    border-radius: 5px;
+    transition: background-color 0.3s;
+    text-align: center;
+    text-decoration: var(--link-text-decoration);
+}
+
+.btn:hover {
+    background-color: var(--button-hover-bg-light);
+}
+
+
+/* Detector Page */
+.detector-page {
+    max-width: 600px;
+    margin: 0 auto;
+    flex: 1 0 auto;
+    padding-bottom: 40px;
+}
+
+.detector-page h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    margin-top: 90px;
+}
+
+#detector-form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+#detector-form input[type="text"],
+#detector-form input[type="url"],
+#detector-form select,
+#detector-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    background-color: #2a2a2a;
+    border: none;
+    color: #ffffff;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 3px;
+}
+
+.form-buttons .btn {
+    width: 48%;
+}
+
+/* History Page */
+.history-page {
+    max-width: 600px;
+    margin: 0 auto;
+    flex: 1 0 auto;
+    padding-bottom: 40px;
+}
+
+.history-page h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    margin-top: 90px;
+}
+
+.search-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 40px;
+    margin-top: 40px;
+}
+
+#search-bar {
+    flex: 1;
+    padding: 10px;
+    background-color: #2a2a2a;
+    border: none;
+    color: #ffffff;
+}
+
+#filter {
+    width: 200px;
+    padding: 10px;
+    background-color: #2a2a2a;
+    border: none;
+    color: #ffffff;
+}
+
+.history-list {
+    list-style: none;
+    padding: 0;
+}
+
+.history-list li {
+    background-color: #1f1f1f;
+    margin-bottom: 10px;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.history-list li a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.history-list li h3 {
+    margin: 0;
+}
+
+.history-list li p {
+    margin: 5px 0 0;
+    color: #bbbbbb;
+}
+
+
+/* Date link styling in the message */
+.history-section a.date-link {
+    text-decoration: none;
+    color: inherit; /* Same color as surrounding text */
+}
+
+.history-section a.date-link:hover {
+    text-decoration: underline;
+}
+
+/* General styling for history items */
+.history-item {
+    border-bottom: none; 
+}
+
+
+/* Highlight the focused article in history.html */
+.history-item.highlight {
+    box-shadow: 0px 0px 10px 2px var(--button-bg-light);
+}
+
+/* Active state for history items */
+.history-item.active {
+    box-shadow: 0px 0px 10px 2px var(--button-bg-light);
+}
+
+/* Hover effect for history items excluding highlighted and active ones */
+.history-item:not(.highlight):not(.active):hover {
+    box-shadow: 0px 0px 10px 2px var(--background-light);
+}
+
+
+/* Additional styles for the history page */
+.history-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.history-list li {
+    margin-bottom: 40px;
+}
+
+/* Remove focus outline when elements are focused */
+.history-item:focus,
+.history-item.highlight:focus {
+    outline: none;
+}
+
+/* Apply focus outline only when focused via keyboard (Tab key) */
+.history-item:focus-visible, 
+.history-item.highlight:focus-visible {
+    outline: solid 0.5px white;
+}
+
+/* About Page */
+.about-page {
+    max-width: 800px;
+    margin: 0 auto;
+    flex: 1 0 auto;
+    padding-bottom: 40px;
+}
+
+.about-page h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    margin-top: 90px;
+}
+
+/* Accordion Styles */
+.accordion {
+    margin-bottom: 30px;
+}
+
+.accordion-item {
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden; /* Contain the accordion content */
+}
+
+.accordion-checkbox {
+    display: none;
+}
+
+.accordion-button {
+    background-color: #333;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    width: 100%;
+    text-align: left;
+    display: block;
+    font-size: 18px;
+    position: relative;
+    border: none;
+    outline: none;
+}
+
+.accordion-button::after {
+    content: '\002B'; /* Plus sign */
+    position: absolute;
+    right: 20px;
+    font-size: 24px;
+}
+
+.accordion-checkbox:checked + .accordion-button::after {
+    content: '\2212'; /* Minus sign */
+}
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    background-color: #1b1b1b;
+    transition: max-height 0.2s ease-out;
+}
+
+.accordion-checkbox:checked ~ .accordion-content {
+    max-height: 800px; /* Adjust as needed */
+}
+
+.accordion-content p,
+.accordion-content h4,
+.accordion-content ul,
+.accordion-content li {
+    color: white;
+    padding: 0 15px;
+    text-align: justify; /* Justify the text */
+}
+
+.accordion-content ul {
+    list-style: disc;
+    margin-left: 20px;
+}
+
+.faq-item h4 {
+    margin-top: 15px;
+}
+
+.faq-item p {
+    margin: 5px 0 15px;
+}
+
+.accordion-button:hover {
+    background-color: #444;
+}
+
+
+
+/* Feedback Page */
+.feedback-page {
+    max-width: 600px;
+    margin: 0 auto;
+    flex: 1 0 auto;
+    padding-bottom: 40px;
+}
+
+.feedback-page h2 {
+    text-align: center;
+    margin-bottom: 40px;
+    margin-top: 90px;
+}
+
+#feedback-form label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+#feedback-form input[type="text"],
+#feedback-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    background-color: #2a2a2a;
+    border: none;
+    color: #ffffff;
+}
+
+.rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    margin-top: 5px;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label {
+    font-size: 24px;
+    color: #cccccc;
+    cursor: pointer;
+    margin-left: 5px;
+    transition: color 0.3s;
+}
+
+.rating input:checked ~ label,
+.rating label:hover,
+.rating label:hover ~ label {
+    color: #ffd700;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.form-buttons .btn {
+    width: 48%;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    backdrop-filter: blur(5px); /* Apply background blur */
+}
+
+.modal-content {
+    position: absolute;
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(-50%, -50%); /* Adjust positioning */
+    background-color: #1e1e1e; /* Dark theme background */
+    color: #ffffff; /* White text for contrast */
+    padding: 20px 30px;
+    border-radius: 10px;
+    width: 440px;
+    box-shadow: 0px 10px 40px rgba(0, 0, 0, 0.5);
+    animation: modalSlideIn 0.5s cubic-bezier(0.42, 0, 0.21, 0.99);
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%); /* Start slightly above center */
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%); /* Centered */
+    }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: #cccccc;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #ffffff;
+}
+
+.modal-message p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.modal-buttons .btn {
+    padding: 8px 16px;
+    margin-left: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 5px;
+}
+
+.cancel-btn {
+    background-color: #444;
+    color: #fff;
+}
+
+.cancel-btn:hover {
+    background-color: #555;
+}
+
+.confirm-btn {
+    background-color: var(--button-bg-light); /* Adjust to match TruthGuard's theme color */
+    color: #fff;
+}
+
+.confirm-btn:hover {
+    background-color: var(--button-hover-bg-light); /* Darker shade on hover */
+}
+
+#success-modal .modal-buttons {
+    display: none; /* Hide buttons in success modal */
+}
+
+
+
+
+
+
+
+/* Footer Styles */
+.footer {
+    background-color: var(--navbar-bg-dark);
+    color: #ffffff;
+    padding: 15px;
+    text-align: center;
+    margin-top: auto;
+    position: static;
+    z-index: 2;
+}
+
+
+/* static/styles.css */
+
+/* Results Styles */
+.results-section {
+    max-width: 800px;
+    margin: 0 auto;
+    flex: 1 0 auto;
+    padding-bottom: 100px;
+    text-align: left;
+    color: white;
+    background-color: #1b1b1b;
+    margin-bottom: 40px;
+}
+
+.results-container {
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #1b1b1b;
+    border-radius: 10px;
+    margin-top: 90px;
+}
+
+.results-section h2 {
+    text-align: center;
+}
+
+.analysis-content h3,
+.analysis-content h4,
+.analysis-content h5 {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.analysis-content h4 {
+    font-size: 18px;
+    margin-top: 25px;
+}
+
+.analysis-content h5 {
+    font-size: 16px;
+    margin-top: 15px;
+    font-weight: normal;
+    text-align: justify;
+}
+
+.analysis-content p {
+    text-align: justify;
+    padding-left: 10px;
+}
+
+.info-text {
+    color: #ffffff; /* Same color as Bias score */
+    text-align: justify;
+    padding-left: 10px;
+}
+
+.alert-message {
+    background-color: #444;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    color: #ffcc00; /* Yellowish color for emphasis */
+}
+
+.line-graph {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 10px;
+    background-color: #ccc;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.line-graph .graph-fill {
+    display: block;
+    height: 100%;
+    background-color: var(--button-bg-light, #00bcd4);
+    width: var(--percentage);
+    border-radius: 5px;
+}
+
+.line-graph:hover::after {
+    content: attr(data-hover-text) "%";
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    z-index: 100;
+}
+
+.article-summary p,
+.bias-score p,
+.fact-check p,
+.history-section p {
+    text-align: justify;
+    padding-left: 10px;
+    color: white;
+}
+
+.no-decoration {
+    text-decoration: none;
+    color: white; /* Match the text color */
+}
+
+/* History Page Styles */
+.history-page {
+    max-width: 1000px; /* Increased width */
+    margin: 0 auto;
+}
+
+.history-section {
+    margin-top: 40px;
+}
+
+/* Added spacing between description and collapsible headings */
+.bias-score details,
+.fact-check details {
+    margin-top: 20px;
+}
+
+.bias-score p,
+.fact-check p {
+    text-align: justify;
+}
+
+/* Bold headings for breakdown summaries */
+details summary {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Justified text for breakdown explanations */
+.justified-text {
+    text-align: justify;
+    padding-left: 10px;
+    font-weight: normal;
+    color: white;
+}
+
+.info-text,
+details,
+.breakdown-content {
+    color: white;
+}
+
+.description-text {
+    color: #dddddd; /* Slightly lighter color for descriptions */
+    text-align: justify;
+    padding-left: 10px;
+}
+
+/* Adjusted spacing */
+.analysis-content h4 {
+    margin-top: 30px;
+}
+
+.analysis-content h5 {
+    margin-top: 10px;
+}
+
+/* Ensuring all text is justified */
+.analysis-content p,
+.analysis-content h5 {
+    text-align: justify;
+}
+
+
+
+
+
+
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination-button {
+    background-color: transparent;
+    border: 1px solid #ccc;
+    color: #ffffff;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination-button:hover {
+    background-color: var(--button-bg-light);
+}
+
+.pagination-button.active {
+    background-color: var(--button-bg-light);
+    border-color: var(--background-light);
+}
+
+.pagination-button i {
+    font-size: 16px;
+}
+
+/* Ensure pagination is centered */
+.history-page .pagination {
+    margin-left: auto;
+    margin-right: auto;
+}
+/* Ensure pagination is centered */
+.history-page .pagination {
+    margin-left: auto;
+    margin-right: auto;
+}
+.history-page .pagination {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+

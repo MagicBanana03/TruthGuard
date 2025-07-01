@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block main_class %}pt-16{% endblock %}
+{% block content %}
+<div class="relative min-h-screen flex items-center justify-center overflow-hidden py-8 px-4 sm:px-6 lg:px-8">
+    <!-- Background Video -->
+    <video autoplay muted loop class="absolute inset-0 w-full h-full object-cover z-0 opacity-30">
+        <source src="{{ url_for('static', filename='videos/fakenews.mp4') }}" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+    
+    <!-- Gradient Overlay -->
+    <div class="absolute inset-0 bg-gradient-to-br from-purple-900/80 via-slate-900/80 to-cyan-900/80 z-10"></div>
+    
+    <!-- Main Content -->
+    <div class="relative z-30 text-center max-w-6xl mx-auto">
+        <!-- Main Title -->
+        <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-orbitron font-black mb-6 leading-tight">
+            Welcome to
+            <span class="block bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
+                TruthGuard
+            </span>
+        </h1>
+        
+        <!-- Subtitle with Typing Effect -->
+        <p class="text-lg sm:text-xl md:text-2xl text-gray-300 mb-12 max-w-4xl mx-auto font-rajdhani font-light">
+            An AI-Powered System for 
+            <span class="text-purple-400 font-semibold">Fact-Checking</span> Political News
+        </p>
+
+        {% if not current_user_id %}
+        <!-- Interactive Description for Logged-out Users -->
+        <div class="mb-16 max-w-4xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105">
+                    <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-robot text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-3 text-center">AI-Powered Analysis</h3>
+                    <p class="text-gray-300 text-center text-sm leading-relaxed">
+                        Advanced machine learning algorithms analyze news articles in real-time, 
+                        checking facts against reliable sources and detecting potential misinformation.
+                    </p>
+                </div>
+
+                <div class="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-purple-500/20 hover:border-purple-400/50 transition-all duration-300 hover:scale-105">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-search text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-3 text-center">Instant Results</h3>
+                    <p class="text-gray-300 text-center text-sm leading-relaxed">
+                        Get immediate factuality scores and detailed analysis reports. 
+                        Understand the credibility of political news in seconds, not hours.
+                    </p>
+                </div>
+
+                <div class="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-green-500/20 hover:border-green-400/50 transition-all duration-300 hover:scale-105">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-400 to-green-600 rounded-full flex items-center justify-center mb-4 mx-auto">
+                        <i class="fas fa-gamepad text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-3 text-center">Learn Through Play</h3>
+                    <p class="text-gray-300 text-center text-sm leading-relaxed">
+                        Sharpen your critical thinking skills with our interactive mystery game. 
+                        Learn to spot fake news while solving engaging detective cases.
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-4xl mx-auto">
+            <div class="bg-black/40 backdrop-blur-lg rounded-xl p-4 border border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105">
+                <div class="text-2xl font-bold text-cyan-400" id="home-reliability">95.2%</div>
+                <div class="text-sm text-gray-400">Avg Factuality</div>
+            </div>
+            <div class="bg-black/40 backdrop-blur-lg rounded-xl p-4 border border-purple-500/30 hover:border-purple-400/50 transition-all duration-300 hover:scale-105">
+                <div class="text-2xl font-bold text-purple-400" id="home-total-articles">...</div>
+                <div class="text-sm text-gray-400">Articles Analyzed</div>
+            </div>
+            <div class="bg-black/40 backdrop-blur-lg rounded-xl p-4 border border-green-500/30 hover:border-green-400/50 transition-all duration-300 hover:scale-105">
+                <div class="text-2xl font-bold text-green-400" id="home-sources">50+</div>
+                <div class="text-sm text-gray-400">News Sources</div>
+            </div>
+            <div class="bg-black/40 backdrop-blur-lg rounded-xl p-4 border border-yellow-500/30 hover:border-yellow-400/50 transition-all duration-300 hover:scale-105">
+                <div class="text-2xl font-bold text-yellow-400">Instant</div>
+                <div class="text-sm text-gray-400">Results</div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+            {% if current_user_id %}
+            <a href="{{ url_for('detector') }}" class="group relative overflow-hidden bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25 flex items-center space-x-3">
+                <i class="fas fa-rocket text-xl group-hover:animate-bounce"></i>
+                <span class="text-lg">Start Analysis</span>
+                <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+            </a>
+            
+            <a href="{{ url_for('game.game_home') }}" class="group relative overflow-hidden bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/25 flex items-center space-x-3">
+                <i class="fas fa-gamepad text-xl group-hover:animate-pulse"></i>
+                <span class="text-lg">Play Game</span>
+                <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+            </a>
+            
+            <a href="{{ url_for('history') }}" class="group bg-black/40 backdrop-blur-lg border-2 border-cyan-500/50 hover:border-cyan-400 text-cyan-300 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:bg-cyan-500/10 flex items-center space-x-3">
+                <i class="fas fa-history text-xl"></i>
+                <span class="text-lg">View History</span>
+            </a>
+            {% else %}
+            <a href="{{ url_for('auth.auth') }}" class="group relative overflow-hidden bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-cyan-500/25 flex items-center space-x-3">
+                <i class="fas fa-rocket text-xl group-hover:animate-bounce"></i>
+                <span class="text-lg">Get Started</span>
+                <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+            </a>
+            
+            <a href="{{ url_for('about') }}" class="group relative overflow-hidden bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-400 hover:to-emerald-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-green-500/25 flex items-center space-x-3">
+                <i class="fas fa-info-circle text-xl group-hover:animate-pulse"></i>
+                <span class="text-lg">Learn More</span>
+                <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+            </a>
+            
+            <a href="{{ url_for('auth.auth') }}" class="group bg-black/40 backdrop-blur-lg border-2 border-cyan-500/50 hover:border-cyan-400 text-cyan-300 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:bg-cyan-500/10 flex items-center space-x-3">
+                <i class="fas fa-search text-xl"></i>
+                <span class="text-lg">Try Demo</span>
+            </a>
+            {% endif %}
+        </div>
+
+        <!-- Quick Access Cards -->
+        <div class="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            {% if current_user_id %}
+            <a href="{{ url_for('detector') }}" class="group bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105 hover:bg-cyan-500/5">
+                <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-search text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Quick Scan</h3>
+                <p class="text-gray-400 text-sm">Analyze articles instantly</p>
+            </a>
+
+            <a href="{{ url_for('game.game_home') }}" class="group bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-orange-500/20 hover:border-orange-400/50 transition-all duration-300 hover:scale-105 hover:bg-orange-500/5">
+                <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-gamepad text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Mystery Game</h3>
+                <p class="text-gray-400 text-sm">Play detective & solve cases</p>
+            </a>
+
+            <a href="{{ url_for('about') }}" class="group bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-purple-500/20 hover:border-purple-400/50 transition-all duration-300 hover:scale-105 hover:bg-purple-500/5">
+                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-info-circle text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Learn More</h3>
+                <p class="text-gray-400 text-sm">Discover how it works</p>
+            </a>
+
+            <a href="{{ url_for('feedback') }}" class="group bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-green-500/20 hover:border-green-400/50 transition-all duration-300 hover:scale-105 hover:bg-green-500/5">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-comment text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Feedback</h3>
+                <p class="text-gray-400 text-sm">Share your experience</p>
+            </a>
+            {% else %}
+            <a href="{{ url_for('auth.auth') }}" class="group bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-cyan-500/20 hover:border-cyan-400/50 transition-all duration-300 hover:scale-105 hover:bg-cyan-500/5">
+                <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-search text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Try Demo</h3>
+                <p class="text-gray-400 text-sm">Test our fact-checking tool</p>
+            </a>
+
+            <a href="{{ url_for('about') }}" class="group bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-purple-500/20 hover:border-purple-400/50 transition-all duration-300 hover:scale-105 hover:bg-purple-500/5">
+                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-info-circle text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">How It Works</h3>
+                <p class="text-gray-400 text-sm">Learn about AI fact-checking</p>
+            </a>
+
+            <a href="{{ url_for('auth.register') }}" class="group bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-green-500/20 hover:border-green-400/50 transition-all duration-300 hover:scale-105 hover:bg-green-500/5">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-user-plus text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Sign Up</h3>
+                <p class="text-gray-400 text-sm">Join the truth revolution</p>
+            </a>
+
+            <a href="{{ url_for('auth.auth') }}" class="group bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-orange-500/20 hover:border-orange-400/50 transition-all duration-300 hover:scale-105 hover:bg-orange-500/5">
+                <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                    <i class="fas fa-gamepad text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Interactive Game</h3>
+                <p class="text-gray-400 text-sm">Play & learn to spot fake news</p>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadHomeStatistics();
+});
+
+function loadHomeStatistics() {
+    // Try multiple endpoints to get article data
+    const endpoints = [
+        '/get_articles?items_per_page=1000',
+        '/api/articles',
+        '/articles',
+        '/history'
+    ];
+    
+    tryHomeEndpoints(endpoints, 0);
+}
+
+function tryHomeEndpoints(endpoints, index) {
+    if (index >= endpoints.length) {
+        // All endpoints failed, use default values
+        console.warn('All endpoints failed, using default statistics');
+        updateHomeStatsDefaults();
+        return;
+    }
+    
+    const endpoint = endpoints[index];
+    
+    fetch(endpoint)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            const articles = data.articles || data.data || data || [];
+            updateHomeStats(articles);
+        })
+        .catch(error => {
+            console.error(`Error with endpoint ${endpoint}:`, error);
+            tryHomeEndpoints(endpoints, index + 1);
+        });
+}
+
+function updateHomeStats(articles) {
+    // Update total articles
+    const totalArticles = articles.length;
+    document.getElementById('home-total-articles').textContent = 
+        totalArticles > 0 ? formatNumber(totalArticles) : '0';
+    
+    // Calculate and update reliability score (average factuality)
+    const validScores = articles
+        .map(article => article.factuality_score)
+        .filter(score => score !== null && score !== undefined && !isNaN(score));
+    
+    if (validScores.length > 0) {
+        const avgReliability = validScores.reduce((sum, score) => sum + score, 0) / validScores.length;
+        document.getElementById('home-reliability').textContent = `${Math.round(avgReliability)}%`;
+    }
+    
+    // Update sources count (unique domains)
+    const sourceMap = new Set();
+    articles.forEach(article => {
+        if (article.link) {
+            try {
+                const domain = new URL(article.link).hostname;
+                sourceMap.add(domain);
+            } catch (e) {
+                // Invalid URL, skip
+            }
+        }
+    });
+    
+    const uniqueSources = sourceMap.size;
+    document.getElementById('home-sources').textContent = 
+        uniqueSources > 0 ? `${uniqueSources}+` : '50+';
+}
+
+function updateHomeStatsDefaults() {
+    // Use default values when backend is not available
+    document.getElementById('home-total-articles').textContent = '0';
+    document.getElementById('home-reliability').textContent = '95.2%';
+    document.getElementById('home-sources').textContent = '50+';
+}
+
+function formatNumber(num) {
+    if (num >= 1000000) {
+        return (num / 1000000).toFixed(1) + 'M';
+    } else if (num >= 1000) {
+        return (num / 1000).toFixed(1) + 'K';
+    }
+    return num.toString();
+}
+</script>
+{% endblock %}

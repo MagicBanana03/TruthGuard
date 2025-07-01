@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block title %}Authentication{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+            <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-cyan-500/20 to-purple-500/20 backdrop-blur-lg rounded-full px-6 py-3 border border-cyan-500/30 mb-6">
+                <i class="fas fa-user-shield text-cyan-400"></i>
+                <span class="text-cyan-300 font-medium">Access Control</span>
+            </div>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent mb-4">
+                Welcome to TruthGuard
+            </h2>
+            <p class="text-gray-300 text-lg max-w-2xl mx-auto">
+                Choose how you'd like to proceed with your fact-checking journey
+            </p>
+        </div>
+
+        <!-- Auth Options -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <!-- Login Option -->
+            <div class="bg-black/40 backdrop-blur-lg rounded-2xl border border-cyan-500/30 p-8 hover:border-cyan-400/50 transition-all duration-300 transform hover:scale-105">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-sign-in-alt text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Welcome Back</h3>
+                    <p class="text-gray-400 mb-6">Already have an account? Sign in to access your dashboard and continue fact-checking.</p>
+                    
+                    <a href="{{ url_for('auth.login') }}" class="w-full group relative overflow-hidden bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 cursor-pointer">
+                        <i class="fas fa-sign-in-alt text-xl"></i>
+                        <span class="text-lg">Sign In</span>
+                        <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Register Option -->
+            <div class="bg-black/40 backdrop-blur-lg rounded-2xl border border-purple-500/30 p-8 hover:border-purple-400/50 transition-all duration-300 transform hover:scale-105">
+                <div class="text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-user-plus text-white text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Join TruthGuard</h3>
+                    <p class="text-gray-400 mb-6">New to TruthGuard? Create your account and start your fact-checking journey today.</p>
+                    
+                    <a href="{{ url_for('auth.register') }}" class="w-full group relative overflow-hidden bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-400 hover:to-pink-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 flex items-center justify-center space-x-3 cursor-pointer">
+                        <i class="fas fa-user-plus text-xl"></i>
+                        <span class="text-lg">Create Account</span>
+                        <div class="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-cyan-500/20 text-center hover:border-cyan-400/50 transition-all duration-300">
+                <div class="w-12 h-12 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-shield-alt text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Secure Access</h3>
+                <p class="text-gray-400 text-sm">Your data is protected with enterprise-level security</p>
+            </div>
+            
+            <div class="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-purple-500/20 text-center hover:border-purple-400/50 transition-all duration-300">
+                <div class="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-history text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Analysis History</h3>
+                <p class="text-gray-400 text-sm">Keep track of all your fact-checking activities</p>
+            </div>
+            
+            <div class="bg-black/30 backdrop-blur-lg rounded-xl p-6 border border-green-500/20 text-center hover:border-green-400/50 transition-all duration-300">
+                <div class="w-12 h-12 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-bolt text-white text-xl"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-white mb-2">Instant Results</h3>
+                <p class="text-gray-400 text-sm">Get real-time fact-checking with AI-powered analysis</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

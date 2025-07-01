@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+<div class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <div class="inline-flex items-center space-x-2 bg-gradient-to-r from-green-500/20 to-cyan-500/20 backdrop-blur-lg rounded-full px-6 py-3 border border-green-500/30 mb-6">
+        <i class="fas fa-check-circle text-green-400"></i>
+        <span class="text-green-300 font-medium">Analysis Complete</span>
+      </div>
+      <h2 class="text-3xl sm:text-4xl md:text-5xl font-orbitron font-bold bg-gradient-to-r from-green-400 to-cyan-400 bg-clip-text text-transparent mb-4">
+        Truth Analysis Results
+      </h2>
+    </div>
+
+    <!-- Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-1 gap-8">
+
+      <!-- Article Summary -->
+      <div class="w-full">
+        <div class="bg-black/40 backdrop-blur-lg rounded-2xl border border-cyan-500/30 p-8 hover:border-cyan-400/50 transition-all duration-300">
+          <div class="flex items-center space-x-3 mb-6">
+            <i class="fas fa-newspaper text-cyan-400 text-2xl"></i>
+            <h3 class="text-2xl font-bold text-white">Article Summary</h3>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <span class="text-gray-400 font-medium">Title:</span>
+              <p class="text-white text-lg font-semibold mt-1">{{ title }}</p>
+            </div>
+            {% if input_type=='link' %}
+            <div>
+              <span class="text-gray-400 font-medium">Source:</span>
+              <p class="mt-1">
+                <a href="{{ source_url }}" target="_blank" class="text-cyan-400 hover:text-cyan-300 transition-colors duration-200 flex items-center space-x-2">
+                  <span>{{ source_display }}</span>
+                  <i class="fas fa-external-link-alt text-sm"></i>
+                </a>
+              </p>
+            </div>
+            {% else %}
+            <div>
+              <span class="text-gray-400 font-medium">Source:</span>
+              <p class="text-white mt-1">{{ source_display }}</p>
+            </div>
+            {% endif %}
+            <div>
+              <span class="text-gray-400 font-medium">AI Summary:</span>
+              <p class="text-gray-300 mt-2 leading-relaxed">{{ summary }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fact Check -->
+      <div class="w-full">
+        <div class="bg-black/40 backdrop-blur-lg rounded-2xl border border-cyan-500/30 p-8 hover:border-cyan-400/50 transition-all duration-300">
+          <div class="flex items-center space-x-3 mb-6">
+            <i class="fas fa-search-plus text-cyan-400 text-2xl"></i>
+            <h3 class="text-xl font-bold text-white">Fact Check</h3>
+          </div>
+
+          <!-- Circle Chart -->
+          <div class="flex flex-col items-center mb-6">
+            <div class="relative w-32 h-32 mb-4">
+              <svg class="w-32 h-32 transform -rotate-90" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" stroke="currentColor" stroke-width="8" fill="none" class="text-gray-700"/>
+                <circle cx="60" cy="60" r="50" stroke="currentColor" stroke-width="8" fill="none"
+                        class="text-cyan-400" stroke-linecap="round"
+                        style="stroke-dasharray: {{ 314 * factuality_percentage / 100 }},314"/>
+              </svg>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center">
+                  <div class="text-2xl font-bold text-cyan-400">{{ factuality_percentage }}%</div>
+                  <div class="text-xs text-gray-400">Accuracy</div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-semibold text-white mb-2">{{ factuality_level }}</div>
+              <div class="px-4 py-2 rounded-full text-sm font-medium
+                {% if factuality_percentage>=80 %}bg-green-500/20 text-green-300 border border-green-500/30
+                {% elif factuality_percentage>=60 %}bg-yellow-500/20 text-yellow-300 border border-yellow-500/30
+                {% elif factuality_percentage>=40 %}bg-orange-500/20 text-orange-300 border border-orange-500/30
+                {% elif factuality_percentage>=20 %}bg-red-500/20 text-red-300 border border-red-500/30
+                {% else %}bg-red-600/20 text-red-400 border border-red-600/30{% endif %}">
+                {% if factuality_percentage>=80 %}Verified
+                {% elif factuality_percentage>=60 %}Reliable
+                {% elif factuality_percentage>=40 %}Mixed
+                {% elif factuality_percentage>=20 %}Questionable
+                {% else %}Unreliable{% endif %}
+              </div>
+            </div>
+          </div>
+
+          <p class="text-gray-300 text-sm mb-4 leading-relaxed">{{ factuality_description }}</p>
+
+          <!-- Breakdown Details -->
+          <details class="group">
+            <summary class="cursor-pointer text-cyan-400 font-semibold hover:text-cyan-300 transition-colors duration-200 flex items-center space-x-2">
+              <i class="fas fa-chevron-right group-open:rotate-90 transition-transform duration-200"></i>
+              <span>View Analysis Details</span>
+            </summary>
+            <div class="mt-4 space-y-3">
+              {% for factor in factuality_breakdown %}
+              <div class="bg-black/30 rounded-lg p-4 border-l-4 border-cyan-400/50">
+                <p class="text-gray-300 text-sm leading-relaxed">
+                  <span class="font-semibold text-cyan-400">{{ loop.index }}.</span>
+                  {{ factor }}
+                </p>
+              </div>
+              {% endfor %}
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="w-full text-center mt-8 space-y-4">
+        <a href="{{ url_for('detector') }}" class="inline-flex items-center space-x-2 bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105">
+          <i class="fas fa-plus text-xl"></i><span>Analyze Another</span>
+        </a>
+        <a href="{{ url_for('history') }}" class="inline-flex items-center space-x-2 bg-black/40 backdrop-blur-lg border-2 border-cyan-500/50 hover:border-cyan-400 text-cyan-300 hover:text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105">
+          <i class="fas fa-history text-xl"></i><span>View History</span>
+        </a>
+      </div>
+
+    </div>
+
+    {% if message %}
+    <div class="mt-12">
+      <div class="bg-black/40 backdrop-blur-lg rounded-2xl border border-yellow-500/30 p-8">
+        <div class="flex items-center space-x-3 mb-4">
+          <i class="fas fa-clock text-yellow-400 text-2xl"></i>
+          <h3 class="text-xl font-bold text-white">Previous Analysis</h3>
+        </div>
+        <div class="text-gray-300">{{ message|safe }}</div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
